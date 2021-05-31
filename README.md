@@ -5,7 +5,7 @@ The Payment SDK for accessing *.vip.ksher.net
 
 ## Init the object
 ```python
-from payment import Payment
+from ksherpay import Payment
 BASE_URL = 'https://dev.vip.ksher.net'
 token = testtoken1234
 payment_handle = Payment(base_url=self.BASE_URL, token=self.token)
