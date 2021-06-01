@@ -2,6 +2,8 @@ from requests import Request, Session
 import datetime
 import time
 import hmac, hashlib
+import logging
+
 # import json
 # import math
 # BASE_URL = 
@@ -18,30 +20,30 @@ class Order(object):
         self.timeout = timeout
 
     def create(self,data):
-        urlStr = self.BASE_URL+ORDER_API       
-        return self._request('POST', urlStr,data=data)
+        endpoint = ORDER_API       
+        return self._request('POST', endpoint,data=data)
 
     def query(self, order_id, params={}):
-        urlStr = self.BASE_URL+ORDER_API+'/{}'.format(order_id)        
-        return self._request('GET', urlStr,data=params)
+        endpoint = ORDER_API+'/{}'.format(order_id)        
+        return self._request('GET', endpoint,data=params)
 
     def refund(self, order_id, params={}):
-        urlStr = self.BASE_URL+ORDER_API+'/{}'.format(order_id)
-        return self._request('PUT', urlStr,data=params)
+        endpoint = ORDER_API+'/{}'.format(order_id)
+        return self._request('PUT', endpoint,data=params)
 
     def cancle(self, order_id):
-        urlStr = self.BASE_URL+ORDER_API+'/{}'.format(order_id)        
-        return self._request('DELETE', urlStr)
+        endpoint = ORDER_API+'/{}'.format(order_id)        
+        return self._request('DELETE', endpoint)
 
-    def _request(self, method, url, data = {}):
+    def _request(self, method, endpoint, data = {}):
         headers =  { "Content-Type": "application/json" }
         method = method.upper()
         if self.mid:
             data['mid'] = self.mid
-
         data['timestamp'] = str(self._make_timestamp())
         data['provider'] = self.provider
-        data['signature'] = self._make_sign(ORDER_API,data)
+        data['signature'] = self._make_sign(endpoint,data)
+        url = self.BASE_URL + endpoint
         req = Request(method, url, headers=headers, json=data)
         prepped = req.prepare()
         s = Session()
@@ -63,9 +65,15 @@ class Order(object):
     def _make_sign(self, url, data):
         # make sure it's is not include a signature value
         data.pop('signature', None)
-        dataStr = ORDER_API + ''.join(sorted([f'{key}{value}' for key, value in data.items()]))
+        data.pop('channel_list', None)
+        # print(f"data:{data}")
+        dataStr = url
+        for key in sorted(data.keys()):
+            dataStr = dataStr+f'{key}{data[key]}'
+        # print("data for making signanuture:{}".format(dataStr))
         dig = hmac.new(self.token.encode(), msg=dataStr.encode(), digestmod=hashlib.sha256).hexdigest()
-        return dig
+        print(dig)
+        return dig.upper()
 
     
         
