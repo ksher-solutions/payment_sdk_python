@@ -17,20 +17,23 @@ NAME = "ksherpay"
 PACKAGES = ['hmac','hashlib','requests','urllib']
 DESCRIPTION = "python implementation for Khser Payment API."
 KEYWORDS = "Ksher, ksher, ksher-payment, ksher-payment-api, ksherpay"
-AUTHOR = "Deemarc B"
-AUTHOR_EMAIL = "deemarc.br@gmail.com"
+AUTHOR = "Ksher"
+AUTHOR_EMAIL = "support@ksher.com"
 URL = "https://github.com/ksher-solutions/payment_sdk_python"
-VERSION = "1.0.0"
+VERSION = "0.1.0"
 LICENSE = "MIT"
 
 setup(
     name = NAME,
     version = VERSION,
     description = DESCRIPTION,
-    # long_description = LONG_DESCRIPTION,
+    long_description = LONG_DESCRIPTION,
+    long_description_content_type='text/markdown',
     classifiers = [
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
+        "Programming Language :: Python :: 3.7",
+        "Topic :: Software Development :: Libraries :: Python Modules",
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
     ],
@@ -40,6 +43,7 @@ setup(
     url = URL,
     license = LICENSE,
     packages = find_packages(),
+    install_requires=['requests >= 2.25.1'],
     include_package_data=True,
     zip_safe=True,
 )
