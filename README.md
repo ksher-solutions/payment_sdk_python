@@ -1,16 +1,16 @@
 # payment_sdk_python
 The Payment SDK for accessing *.vip.ksher.net
 
-# How to Install
+## How to Install
 
 you can git clone this repository and install this package
 
-## step1: clone this repository
+### step1: clone this repository
 ```shell
 git clone https://github.com/ksher-solutions/payment_sdk_python
 ```
 
-## step2: cd into cloned source code and pip install all the requriements and the package itself
+### step2: cd into cloned source code and pip install all the requriements and the package itself
 ```shell
 cd payment_sdk_python
 pip install -r requirements.txt
@@ -18,9 +18,9 @@ pip install .
 
 ```
 
-# How to Use
+## How to Use
 
-## Init the object
+### Init Payment Object
 ```python
 from ksherpay import Payment
 BASE_URL = 'https://dev.vip.ksher.net'
@@ -28,7 +28,7 @@ token = testtoken1234
 payment_handle = Payment(base_url=self.BASE_URL, token=self.token)
 ```
 
-## Create New Order
+### Create New Order
 ***merchant_order_id need to be unique or else the request will end with error***
 
 ```python
@@ -46,14 +46,14 @@ resp = payment_handle.order.create(data)
 print(resp.status_code) # this should return 200
 ```
 
-## Query order status
+### Query order status
 ```python
 merchant_order_id = 'OrderId000001'
 resp = payment_handle.order.query(data)
 print(resp.status_code) # this should return 200
 ```
 
-## Refund
+### Refund
 ***Refund_id need to be unique or else the request will end with error***
 ```python
 merchant_order_id = 'OrderId000001'
