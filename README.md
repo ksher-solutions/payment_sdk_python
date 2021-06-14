@@ -10,9 +10,10 @@ you can git clone this repository and install this package
 git clone https://github.com/ksher-solutions/payment_sdk_python
 ```
 
-## step2: cd into cloned source code and pip install it
+## step2: cd into cloned source code and pip install all the requriements and the package itself
 ```shell
 cd payment_sdk_python
+pip install -r requirements.txt
 pip install .
 
 ```
