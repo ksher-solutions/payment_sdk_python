@@ -1,4 +1,21 @@
-# payment_sdk_python
+# Payment_sdk_python
+
+This is python sdk for intergrating your python application with Ksher Payment Gateway. Please refers to our official api document [here](https://doc.vip.ksher.net)
+
+## Requirement
+- Python 3.7
+    - other python3 version should also work, but python package version might cause some conflice and minor change might need to be done.
+
+- Ksher Payment API Account
+    - Requesting sandbox account please contact support@ksher.com
+    
+- API_URL
+    - Along with a sandbox accout, you will be receiving a API_URL in this format: s[UNIQUE_NAME].vip.ksher.net
+
+- API_TOKEN
+    - Log in into API_URL using given sandbox account and get the token. see (How to get API Token)[https://doc.vip.ksher.net/docs/howto/api_token]
+
+
 The Payment SDK for accessing *.vip.ksher.net
 
 ## How to Install
@@ -19,13 +36,18 @@ pip install .
 ```
 
 ## How to Use
+you need to first init the payment object and that you can use it to;
+- Create New Order
+- Query Order Status
+- Refund the Order
+
 
 ### Init Payment Object
 ```python
 from ksherpay import Payment
-BASE_URL = 'https://dev.vip.ksher.net'
-token = testtoken1234
-payment_handle = Payment(base_url=self.BASE_URL, token=self.token)
+API_URL = 'https://sandboxbkk.vip.ksher.net'
+API_TOKEN = testtoken1234
+payment_handle = Payment(base_url=API_URL, token=API_TOKEN)
 ```
 
 ### Create New Order
@@ -49,7 +71,7 @@ print(resp.status_code) # this should return 200
 ### Query order status
 ```python
 merchant_order_id = 'OrderId000001'
-resp = payment_handle.order.query(data)
+resp = payment_handle.order.query(merchant_order_id)
 print(resp.status_code) # this should return 200
 ```
 
