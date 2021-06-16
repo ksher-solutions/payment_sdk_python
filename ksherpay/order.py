@@ -3,7 +3,7 @@ import datetime
 import time
 import hmac, hashlib
 import logging
-
+import json
 # import json
 # import math
 # BASE_URL = 
@@ -19,23 +19,23 @@ class Order(object):
         self.BASE_URL = base_url
         self.timeout = timeout
 
-    def create(self,data):
+    def create(self,data, verify=True):
         endpoint = ORDER_API       
         return self._request('POST', endpoint,data=data)
 
-    def query(self, order_id, params={}):
+    def query(self, order_id, params={}, verify=True):
         endpoint = ORDER_API+'/{}'.format(order_id)        
-        return self._request('GET', endpoint,data=params)
+        return self._request('GET', endpoint,data=params, verify=verify)
 
-    def refund(self, order_id, params={}):
+    def refund(self, order_id, params={}, verify=True):
         endpoint = ORDER_API+'/{}'.format(order_id)
-        return self._request('PUT', endpoint,data=params)
+        return self._request('PUT', endpoint,data=params, verify=verify)
 
-    def cancle(self, order_id):
+    def cancle(self, order_id, verify=True):
         endpoint = ORDER_API+'/{}'.format(order_id)        
-        return self._request('DELETE', endpoint)
+        return self._request('DELETE', endpoint, verify=verify)
 
-    def _request(self, method, endpoint, data = {}):
+    def _request(self, method, endpoint, data = {}, verify=True):
         headers =  { "Content-Type": "application/json" }
         method = method.upper()
         if self.mid:
@@ -49,6 +49,20 @@ class Order(object):
         s = Session()
         resp = s.send(prepped, timeout=self.timeout)
         s.close()
+        if (resp.status_code == 200) and verify:
+            data = resp.json()
+            isValid = self._verify_ksher_sign(endpoint, data)
+            if not isValid:
+                resp_data = {
+                    'force_clear': False, 
+                    'cleared': False, 
+                    'error_code': '"VERIFY_KSHER_SIGN_FAIL', 
+                    'error_message': 'verify signature failed',
+                    'locked': False
+                }
+                resp._content =  json.dumps(resp_data).encode('utf-8')
+
+
         return resp
 
     def generate_order_id(self, orderName='OrderAt'):
@@ -65,15 +79,26 @@ class Order(object):
     def _make_sign(self, url, data):
         # make sure it's is not include a signature value
         data.pop('signature', None)
-        data.pop('channel_list', None)
+        # data.pop('channel_list', None)
         # print(f"data:{data}")
-        dataStr = url
-        for key in sorted(data.keys()):
-            dataStr = dataStr+f'{key}{data[key]}'
+        sort_list = sorted(data)
+        dataStr = url + ''.join(f"{key}{data[key]}" for key in sort_list)
         # print("data for making signanuture:{}".format(dataStr))
         dig = hmac.new(self.token.encode(), msg=dataStr.encode(), digestmod=hashlib.sha256).hexdigest()
-        print(dig)
+        print(f"========================datastr:{dataStr}")
         return dig.upper()
 
-    
+    def _verify_ksher_sign(self, url, data):
+        """
+        input: data(dict)
+        output return true when the signature is valid
+        """
+        signature = data.pop('signature',None)
+        if not signature:
+            return False
+        sort_list = sorted(data)
+        dataStr = url + ''.join(f"{key}{data[key]}" for key in sort_list)
+        print(f"========================datastr:{dataStr}")
+        dig = hmac.new(self.token.encode(), msg=dataStr.encode(), digestmod=hashlib.sha256).hexdigest()
+        return signature == dig
         
