@@ -12,36 +12,37 @@ ORDER_API = '/api/v1/redirect/orders'
 class Order(object):
     # BASE_URL = 'http://sandbox.lan:9000/'
 
-    def __init__(self, base_url, token=None, provider='Ksher', mid=None, timeout=10):
+    def __init__(self, base_url, token=None, provider='Ksher', mid=None, timeout=10, verify=True):
         self.token = token
         self.provider = provider
         self.mid = mid
         self.BASE_URL = base_url
         self.timeout = timeout
+        self.verify = verify
 
-    def create(self,data, verify=True):
+    def create(self, data):
         endpoint = ORDER_API       
         return self._request('POST', endpoint,data=data)
 
-    def query(self, order_id, params={}, verify=True):
+    def query(self, order_id, params={}):
         endpoint = ORDER_API+'/{}'.format(order_id)        
-        return self._request('GET', endpoint,data=params, verify=verify)
+        return self._request('GET', endpoint,data=params)
 
-    def refund(self, order_id, params={}, verify=True):
+    def refund(self, order_id, params={}):
         endpoint = ORDER_API+'/{}'.format(order_id)
-        return self._request('PUT', endpoint,data=params, verify=verify)
+        return self._request('PUT', endpoint,data=params)
 
-    def cancle(self, order_id, verify=True):
+    def cancle(self, order_id):
         endpoint = ORDER_API+'/{}'.format(order_id)        
-        return self._request('DELETE', endpoint, verify=verify)
+        return self._request('DELETE', endpoint)
 
-    def _request(self, method, endpoint, data = {}, verify=True):
+    def _request(self, method, endpoint, data = {}):
         headers =  { "Content-Type": "application/json" }
         method = method.upper()
         if self.mid:
             data['mid'] = self.mid
         data['timestamp'] = str(self._make_timestamp())
-        data['provider'] = self.provider
+        # data['provider'] = self.provider
         data['signature'] = self._make_sign(endpoint,data)
         url = self.BASE_URL + endpoint
         req = Request(method, url, headers=headers, json=data)
@@ -49,9 +50,9 @@ class Order(object):
         s = Session()
         resp = s.send(prepped, timeout=self.timeout)
         s.close()
-        if (resp.status_code == 200) and verify:
+        if (resp.status_code == 200) and self.verify:
             data = resp.json()
-            isValid = self._verify_ksher_sign(endpoint, data)
+            isValid = self.checkSignature(endpoint, data)
             if not isValid:
                 resp_data = {
                     'force_clear': False, 
@@ -80,15 +81,13 @@ class Order(object):
         # make sure it's is not include a signature value
         data.pop('signature', None)
         # data.pop('channel_list', None)
-        # print(f"data:{data}")
         sort_list = sorted(data)
         dataStr = url + ''.join(f"{key}{data[key]}" for key in sort_list)
         # print("data for making signanuture:{}".format(dataStr))
         dig = hmac.new(self.token.encode(), msg=dataStr.encode(), digestmod=hashlib.sha256).hexdigest()
-        print(f"========================datastr:{dataStr}")
         return dig.upper()
 
-    def _verify_ksher_sign(self, url, data):
+    def checkSignature(self, url, data):
         """
         input: data(dict)
         output return true when the signature is valid
@@ -96,9 +95,5 @@ class Order(object):
         signature = data.pop('signature',None)
         if not signature:
             return False
-        sort_list = sorted(data)
-        dataStr = url + ''.join(f"{key}{data[key]}" for key in sort_list)
-        print(f"========================datastr:{dataStr}")
-        dig = hmac.new(self.token.encode(), msg=dataStr.encode(), digestmod=hashlib.sha256).hexdigest()
+        dig = self._make_sign(url, data)
         return signature == dig
-        
