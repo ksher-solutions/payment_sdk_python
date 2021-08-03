@@ -20,14 +20,24 @@ The Payment SDK for accessing *.vip.ksher.net
 
 ## How to Install
 
-you can git clone this repository and install this package
+there are two option two install this package;
 
-### step1: clone this repository
+1. Pip Install This package
+2. Clone this repository
+
+### Option 2: Pip Install This package
+```
+pip install ksherpay
+```
+
+### Option 1: Clone this repository
+
+#### Step1: clone this repository
 ```shell
 git clone https://github.com/ksher-solutions/payment_sdk_python
 ```
 
-### step2: cd into cloned source code and pip install all the requriements and the package itself
+#### Step2: cd into cloned source code and pip install all the requriements and the package itself
 ```shell
 cd payment_sdk_python
 pip install -r requirements.txt
@@ -35,20 +45,37 @@ pip install .
 
 ```
 
+
 ## How to Use
 you need to first init the payment object and that you can use it to;
+- Init Payment Object
 - Create New Order
 - Query Order Status
 - Refund the Order
 
 
 ### Init Payment Object
+
 ```python
 from ksherpay import Payment
 API_URL = 'https://sandboxbkk.vip.ksher.net'
 API_TOKEN = testtoken1234
 payment_handle = Payment(base_url=API_URL, token=API_TOKEN)
 ```
+
+#### Disable Sign Verification
+In early phase of implementation. You might want to disable Sign Verification to debug on other thing without the need to worry if the bug is coming for signature.
+
+*** for Security purpose, don't forget to enable this sign verfication back first before going on Production environment.
+
+to disbable sign you simply do this;
+```python
+from ksherpay import Payment
+API_URL = 'https://sandboxbkk.vip.ksher.net'
+API_TOKEN = testtoken1234
+payment_handle = Payment(base_url=API_URL, token=API_TOKEN, verify=False)
+```
+
 
 ### Create New Order
 ***merchant_order_id need to be unique or else the request will end with error***
