@@ -31,7 +31,7 @@ class OrderCreateTestCase(unittest.TestCase):
         payment_handle = Payment(base_url=self.BASE_URL, token=self.token)
         data = {
             "amount": 100,
-            "channel_list": "linepay,airpay,wechat,bbl_promptpay,truemoney,ktbcard",
+            "channel": "linepay,airpay,wechat,bbl_promptpay,truemoney,ktbcard",
             "note": "string",
             "redirect_url": "http://www.baidu.com",
             "redirect_url_fail": "http://www.baidu.com",
@@ -75,7 +75,7 @@ class OrderCreateTestCase(unittest.TestCase):
         payment_handle = Payment(base_url=self.BASE_URL, token=self.token)
         data = {
             "amount": 100,
-            "channel_list": "linepay,airpay,wechat,bbl_promptpay,truemoney,ktbcard",
+            "channel": "linepay,airpay,wechat,bbl_promptpay,truemoney,ktbcard",
             "note": "string",
             "redirect_url": "http://www.baidu.com",
             "redirect_url_fail": "http://www.baidu.com",
@@ -108,7 +108,7 @@ class OrderCreateTestCase(unittest.TestCase):
         payment_amount = 100
         data = {
             "amount": payment_amount,
-            "channel_list": "linepay,airpay,wechat,bbl_promptpay,truemoney,ktbcard",
+            "channel": "linepay,airpay,wechat,bbl_promptpay,truemoney,ktbcard",
             "note": "string",
             "redirect_url": "http://www.baidu.com",
             "redirect_url_fail": "http://www.baidu.com",
