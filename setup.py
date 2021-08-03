@@ -20,7 +20,7 @@ KEYWORDS = "Ksher, ksher, ksher-payment, ksher-payment-api, ksherpay"
 AUTHOR = "Ksher"
 AUTHOR_EMAIL = "support@ksher.com"
 URL = "https://github.com/ksher-solutions/payment_sdk_python"
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 LICENSE = "MIT"
 
 setup(
