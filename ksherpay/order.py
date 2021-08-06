@@ -93,6 +93,10 @@ class Order(object):
         output return true when the signature is valid
         """
         signature = data.pop('signature',None)
+
+        # log_entry_url is not include in make_signature process
+        data.pop('log_entry_url',None)
+        
         if not signature:
             return False
         dig = self._make_sign(url, data)
