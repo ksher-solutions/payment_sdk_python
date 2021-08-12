@@ -9,7 +9,7 @@ logging.root.setLevel('INFO')
 import time
 
 
-class OrderCreateTestCase(unittest.TestCase):
+class RedirectOrderCreateTestCase(unittest.TestCase):
 
     def setUp(self):
         """Define test variables and initialize app."""

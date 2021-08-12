@@ -25,12 +25,12 @@ there are two option two install this package;
 1. Pip Install This package
 2. Clone this repository
 
-### Option 2: Pip Install This package
+### Option 1: Pip Install This package
 ```
 pip install ksherpay
 ```
 
-### Option 1: Clone this repository
+### Option 2: Clone this repository
 
 #### Step1: clone this repository
 ```shell
@@ -55,12 +55,39 @@ you need to first init the payment object and that you can use it to;
 
 
 ### Init Payment Object
+ksherpay have multiple api (apiType) such as;
+- redirect API is for Website and Mobile App integration.
+- settlement API is for checking the settlement information.
+- miniapp API is for WeChat and Alipay Mini-Program integration.
+- event API is for checking the events deliveried.
+- C scan B API is for C scan B(merchant present QR code) or Kiosk integration.
+- B scan C API is for B scan C(customer present QR code) or POS integration.
+
+you can read about it [here](https://doc.vip.ksher.net/docs/user_guide/swagger)
+
+currently this python sdk support only two api; 'redirect api' and 'c scan b api'
+
+#### Redirect API
+
+the defaul api is redirect api you can just init it like this
 
 ```python
 from ksherpay import Payment
 API_URL = 'https://sandboxbkk.vip.ksher.net'
 API_TOKEN = testtoken1234
 payment_handle = Payment(base_url=API_URL, token=API_TOKEN)
+```
+
+#### C_Scan_B API
+to use 'C_Scan_B API', you need to specified it when init the object
+
+**as shown in the code, please use ksherpay package's provided value to specified the apiType value**
+
+```python
+from ksherpay import Payment, API_TYPE
+API_URL = 'https://sandboxbkk.vip.ksher.net'
+API_TOKEN = testtoken1234
+payment_handle = Payment(base_url=API_URL, apiType=API_TYPE.CSCANB, token=API_TOKEN)
 ```
 
 #### Disable Sign Verification
@@ -80,14 +107,31 @@ payment_handle = Payment(base_url=API_URL, token=API_TOKEN, verify=False)
 ### Create New Order
 ***merchant_order_id need to be unique or else the request will end with error***
 
+to create new order, each apiType has slightly different required parameters
+
+#### Redirect API
 ```python
 data = {
             "amount": 100,
             "merchant_order_id": "OrderId000001",
-            "channel_list": "linepay,airpay,wechat,bbl_promptpay,truemoney,ktbcard",
+            "channel": "linepay,airpay,wechat,bbl_promptpay,truemoney,ktbcard",
             "note": "string",
             "redirect_url": "http://www.baidu.com",
             "redirect_url_fail": "http://www.baidu.com",
+            "signature": "string",
+            "timestamp": "string"
+        }
+resp = payment_handle.order.create(data)
+print(resp.status_code) # this should return 200
+```
+#### C_Scan_B API
+for 'C_Scan_B API', redirect_url is not needed and you can specified one channel at a time.
+```python
+data = {
+            "amount": 100,
+            "merchant_order_id": "OrderId000001",
+            "channel": "truemoney",
+            "note": "string",
             "signature": "string",
             "timestamp": "string"
         }
