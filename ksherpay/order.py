@@ -4,36 +4,36 @@ import time
 import hmac, hashlib
 import logging
 import json
-# import json
-# import math
-# BASE_URL = 
-ORDER_API = '/api/v1/redirect/orders'
+
+from .constant import API_TYPE
+
 
 class Order(object):
     # BASE_URL = 'http://sandbox.lan:9000/'
 
-    def __init__(self, base_url, token=None, provider='Ksher', mid=None, timeout=10, verify=True):
+    def __init__(self, base_url, apiType=API_TYPE.REDIRECT ,token=None, provider='Ksher', mid=None, timeout=10, verify=True):
         self.token = token
         self.provider = provider
         self.mid = mid
-        self.BASE_URL = base_url
+        self.base_url = base_url
+        self.orderApi = '/api/v1' + apiType + '/orders'
         self.timeout = timeout
         self.verify = verify
 
     def create(self, data):
-        endpoint = ORDER_API       
+        endpoint = self.orderApi       
         return self._request('POST', endpoint,data=data)
 
     def query(self, order_id, params={}):
-        endpoint = ORDER_API+'/{}'.format(order_id)        
+        endpoint = self.orderApi + '/{}'.format(order_id)        
         return self._request('GET', endpoint,data=params)
 
     def refund(self, order_id, params={}):
-        endpoint = ORDER_API+'/{}'.format(order_id)
+        endpoint = self.orderApi + '/{}'.format(order_id)
         return self._request('PUT', endpoint,data=params)
 
     def cancle(self, order_id):
-        endpoint = ORDER_API+'/{}'.format(order_id)        
+        endpoint = self.orderApi + '/{}'.format(order_id)        
         return self._request('DELETE', endpoint)
 
     def _request(self, method, endpoint, data = {}):
@@ -44,7 +44,7 @@ class Order(object):
         data['timestamp'] = str(self._make_timestamp())
         # data['provider'] = self.provider
         data['signature'] = self._make_sign(endpoint,data)
-        url = self.BASE_URL + endpoint
+        url = self.base_url + endpoint
         req = Request(method, url, headers=headers, json=data)
         prepped = req.prepare()
         s = Session()
