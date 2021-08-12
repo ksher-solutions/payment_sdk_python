@@ -25,12 +25,12 @@ there are two option two install this package;
 1. Pip Install This package
 2. Clone this repository
 
-### Option 2: Pip Install This package
+### Option 1: Pip Install This package
 ```
 pip install ksherpay
 ```
 
-### Option 1: Clone this repository
+### Option 2: Clone this repository
 
 #### Step1: clone this repository
 ```shell
