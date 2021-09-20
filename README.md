@@ -117,9 +117,7 @@ data = {
             "channel": "linepay,airpay,wechat,bbl_promptpay,truemoney,ktbcard",
             "note": "string",
             "redirect_url": "http://www.baidu.com",
-            "redirect_url_fail": "http://www.baidu.com",
-            "signature": "string",
-            "timestamp": "string"
+            "redirect_url_fail": "http://www.baidu.com"
         }
 resp = payment_handle.order.create(data)
 print(resp.status_code) # this should return 200
@@ -132,8 +130,6 @@ data = {
             "merchant_order_id": "OrderId000001",
             "channel": "truemoney",
             "note": "string",
-            "signature": "string",
-            "timestamp": "string"
         }
 resp = payment_handle.order.create(data)
 print(resp.status_code) # this should return 200
