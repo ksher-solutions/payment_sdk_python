@@ -37,7 +37,6 @@ class Order(object):
         return self._request('DELETE', endpoint)
 
     def _request(self, method, endpoint, data = {}):
-        headers =  { "Content-Type": "application/json" }
         method = method.upper()
         if self.mid:
             data['mid'] = self.mid
@@ -45,11 +44,17 @@ class Order(object):
         # data['provider'] = self.provider
         data['signature'] = self._make_sign(endpoint,data)
         url = self.base_url + endpoint
-        req = Request(method, url, headers=headers, json=data)
+        if method == "GET":
+            headers =  {"Accept": "application/json" }
+            req = Request(method, url, headers=headers, params=data)
+        else:
+            headers =  {"Content-Type": "application/json",}
+            req = Request(method, url, headers=headers, json=data)
         prepped = req.prepare()
         s = Session()
         resp = s.send(prepped, timeout=self.timeout)
         s.close()
+
         if (resp.status_code == 200) and self.verify:
             data = resp.json()
             isValid = self.checkSignature(endpoint, data)
@@ -62,7 +67,6 @@ class Order(object):
                     'locked': False
                 }
                 resp._content =  json.dumps(resp_data).encode('utf-8')
-
 
         return resp
 
