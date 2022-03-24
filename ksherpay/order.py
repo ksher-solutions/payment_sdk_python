@@ -4,9 +4,8 @@ import time
 import hmac, hashlib
 import logging
 import json
-
 from .constant import API_TYPE
-
+from utils import Utils
 
 class Order(object):
     # BASE_URL = 'http://sandbox.lan:9000/'
@@ -19,22 +18,29 @@ class Order(object):
         self.orderApi = '/api/v1' + apiType + '/orders'
         self.timeout = timeout
         self.verify = verify
+        self.utils = Utils()
 
     def create(self, data):
-        endpoint = self.orderApi       
-        return self._request('POST', endpoint,data=data)
+        endpoint = self.orderApi
+        if self.mid:
+            data['mid'] = self.mid
+        return self.utils._request(method='POST', base_url=self.base_url, endpoint=endpoint, data=data, token=self.token, timeout=self.timeout, verify=self.verify)
 
     def query(self, order_id, params={}):
-        endpoint = self.orderApi + '/{}'.format(order_id)        
-        return self._request('GET', endpoint,data=params)
+        endpoint = self.orderApi + '/{}'.format(order_id)
+        if self.mid:
+            params['mid'] = self.mid
+        return self.utils._request(method='GET', base_url=self.base_url, endpoint=endpoint, data=params, token=self.token, timeout=self.timeout, verify=self.verify)
 
     def refund(self, order_id, params={}):
         endpoint = self.orderApi + '/{}'.format(order_id)
-        return self._request('PUT', endpoint,data=params)
+        if self.mid:
+            params['mid'] = self.mid
+        return self.utils._request(method='PUT', base_url=self.base_url, endpoint=endpoint, data=params, token=self.token, timeout=self.timeout, verify=self.verify)
 
-    def cancle(self, order_id):
-        endpoint = self.orderApi + '/{}'.format(order_id)        
-        return self._request('DELETE', endpoint)
+    def cancel(self, order_id):
+        endpoint = self.orderApi + '/{}'.format(order_id)
+        return self.utils._request(method='DELETE', base_url=self.base_url, endpoint=endpoint, data={}, token=self.token, timeout=self.timeout, verify=self.verify)
 
     def _request(self, method, endpoint, data = {}):
         method = method.upper()

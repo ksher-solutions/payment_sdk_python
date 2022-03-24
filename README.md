@@ -13,7 +13,7 @@ This is python sdk for intergrating your python application with Ksher Payment G
     - Along with a sandbox accout, you will be receiving a API_URL in this format: s[UNIQUE_NAME].vip.ksher.net
 
 - API_TOKEN
-    - Log in into API_URL using given sandbox account and get the token. see (How to get API Token)[https://doc.vip.ksher.net/docs/howto/api_token]
+    - Log in into API_URL using given sandbox account and get the token. see [How to get API Token](https://doc.vip.ksher.net/docs/howto/api_token)
 
 
 The Payment SDK for accessing *.vip.ksher.net
@@ -43,6 +43,11 @@ cd payment_sdk_python
 pip install -r requirements.txt
 pip install .
 
+```
+
+or if you want to pip install from local please use
+```
+pip install ./payment_sdk_python --user 
 ```
 
 

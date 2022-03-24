@@ -1,4 +1,5 @@
 from .order import Order
+from .settlements import Settlements
 from .constant import API_TYPE
 
 
@@ -10,6 +11,14 @@ class Payment(object):
             base_url = base_url[:-1]
         
         self.order = Order(base_url,
+                            apiType=apiType, 
+                            token=token, 
+                            provider=provider, 
+                            mid=mid, 
+                            timeout=timeout,
+                            verify=verify)
+        
+        self.settlements = Settlements(base_url,
                             apiType=apiType, 
                             token=token, 
                             provider=provider, 
