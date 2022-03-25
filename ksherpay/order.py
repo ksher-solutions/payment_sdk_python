@@ -5,7 +5,7 @@ import hmac, hashlib
 import logging
 import json
 from .constant import API_TYPE
-from utils import Utils
+from .utils import Utils
 
 class Order(object):
     # BASE_URL = 'http://sandbox.lan:9000/'

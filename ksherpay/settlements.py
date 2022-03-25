@@ -1,5 +1,5 @@
 from .constant import API_TYPE
-from utils import Utils
+from .utils import Utils
 
 
 class Settlements(object):
