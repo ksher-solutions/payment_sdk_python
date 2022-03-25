@@ -1,16 +1,16 @@
 # Payment_sdk_python
 
-This is python sdk for intergrating your python application with Ksher Payment Gateway. Please refers to our official api document [here](https://doc.vip.ksher.net)
+This is python sdk for integrating your python application with Ksher Payment Gateway. Please refers to our official api document [here](https://doc.vip.ksher.net)
 
 ## Requirement
 - Python 3.7
-    - other python3 version should also work, but python package version might cause some conflice and minor change might need to be done.
+    - other python3 version should also work, but python package version might cause some conflict and minor change might need to be done.
 
 - Ksher Payment API Account
     - Requesting sandbox account please contact support@ksher.com
     
 - API_URL
-    - Along with a sandbox accout, you will be receiving a API_URL in this format: s[UNIQUE_NAME].vip.ksher.net
+    - Along with a sandbox account, you will be receiving a API_URL in this format: s[UNIQUE_NAME].vip.ksher.net
 
 - API_TOKEN
     - Log in into API_URL using given sandbox account and get the token. see [How to get API Token](https://doc.vip.ksher.net/docs/howto/api_token)
@@ -74,7 +74,7 @@ currently this python sdk support only two api; 'redirect api' and 'c scan b api
 
 #### Redirect API
 
-the defaul api is redirect api you can just init it like this
+the default api is redirect api you can just init it like this
 
 ```python
 from ksherpay import Payment
@@ -95,12 +95,42 @@ API_TOKEN = testtoken1234
 payment_handle = Payment(base_url=API_URL, apiType=API_TYPE.CSCANB, token=API_TOKEN)
 ```
 
+#### B_Scan_C API
+to use 'B_Scan_C API', you need to specified it when init the object
+
+**as shown in the code, please use ksherpay package's provided value to specified the apiType value**
+
+```python
+from ksherpay import Payment, API_TYPE
+API_URL = 'https://sandboxbkk.vip.ksher.net'
+API_TOKEN = testtoken1234
+payment_handle = Payment(base_url=API_URL, apiType=API_TYPE.BSCANC, token=API_TOKEN)
+```
+
+#### Finance API
+to use 'Finance API', you need to specified it when init the object
+
+**as shown in the code, please use ksherpay package's provided value to specified the apiType value**
+
+```python
+from ksherpay import Payment, API_TYPE
+API_URL = 'https://sandboxbkk.vip.ksher.net'
+API_TOKEN = testtoken1234
+payment_handle = Payment(base_url=API_URL, apiType=API_TYPE.FINANCE, token=API_TOKEN)
+data = {
+            "mid": "35618",
+            "signature": "string",
+            "timestamp": "string"
+        }
+resp = payment_handle.settlements.channels(params=data)
+```
+
 #### Disable Sign Verification
 In early phase of implementation. You might want to disable Sign Verification to debug on other thing without the need to worry if the bug is coming for signature.
 
-*** for Security purpose, don't forget to enable this sign verfication back first before going on Production environment.
+*** for Security purpose, don't forget to enable this sign verification back first before going on Production environment.
 
-to disbable sign you simply do this;
+to disable sign you simply do this;
 ```python
 from ksherpay import Payment
 API_URL = 'https://sandboxbkk.vip.ksher.net'
