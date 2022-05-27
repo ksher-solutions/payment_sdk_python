@@ -17,7 +17,7 @@ class FinanceOrderCreateTestCase(unittest.TestCase):
     def setUp(self):
         """Define test variables and initialize app."""
         load_dotenv()
-        self.BASE_URL = 'https://sandboxbkk.vip.ksher.net'
+        self.BASE_URL = 'https://sandboxdoc.vip.ksher.net'
         self.token = os.environ.get("API_TOKEN") 
         logging.info("token:{}".format(self.token))
         # self.database_name = "trivia_test"

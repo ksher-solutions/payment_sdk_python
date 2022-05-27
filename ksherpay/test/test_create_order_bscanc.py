@@ -17,7 +17,7 @@ class BscanCOrderCreateTestCase(unittest.TestCase):
     def setUp(self):
         """Define test variables and initialize app."""
         load_dotenv()
-        self.BASE_URL = 'https://sandboxbkk.vip.ksher.net'
+        self.BASE_URL = 'https://sandboxdoc.vip.ksher.net'
         self.token = os.environ.get("API_TOKEN") 
         logging.info("token:{}".format(self.token))
         # self.database_name = "trivia_test"
@@ -33,6 +33,7 @@ class BscanCOrderCreateTestCase(unittest.TestCase):
         logging.info("============ START test case: test_create_invalid_payment_code ============")
         payment_handle = Payment(base_url=self.BASE_URL, apiType=API_TYPE.BSCANC ,token=self.token)
         data = {
+            "mid":"mch38026",
             "auth_code":"11111",
             "amount": 100,
             "channel": "truemoney",
@@ -59,6 +60,7 @@ class BscanCOrderCreateTestCase(unittest.TestCase):
         payment_handle = Payment(base_url=self.BASE_URL, apiType=API_TYPE.BSCANC, token=self.token)
         # missing need param
         data = {
+            "mid":"mch38026",
             "amount":100,
             "channel": "truemoney",
             "note": "string",
@@ -76,6 +78,7 @@ class BscanCOrderCreateTestCase(unittest.TestCase):
         # ceate an order and not pay result in pending order
         payment_handle = Payment(base_url=self.BASE_URL, apiType=API_TYPE.BSCANC ,token=self.token)
         data = {
+            "mid":"mch38026",
             "auth_code":"11111",
             "amount": 100,
             "channel": "truemoney",
@@ -95,7 +98,7 @@ class BscanCOrderCreateTestCase(unittest.TestCase):
             self.assertEqual(data['error_code'], 'FAIL')
             self.assertIn('invalid_payment_code',data['reserved3'])
 
-            resp = payment_handle.order.query(data['merchant_order_id'])
+            resp = payment_handle.order.query(data['merchant_order_id'],params={"mid":"mch38026"})
             self.assertEqual(resp.status_code, 200)
             logging.info("successfully query order with following response data:")
             data = resp.json()
@@ -109,6 +112,7 @@ class BscanCOrderCreateTestCase(unittest.TestCase):
         payment_amount = 100
         data = {
             "amount": payment_amount,
+            "mid":"mch38026",
             "channel": "truemoney",
             "note": "string",
             "signature": "string",
@@ -130,7 +134,7 @@ class BscanCOrderCreateTestCase(unittest.TestCase):
             self.assertEqual(data['error_code'], 'SUCCESS')
             self.assertEqual(data['status'], 'Paid')
             
-            resp = payment_handle.order.query(data['merchant_order_id'])
+            resp = payment_handle.order.query(data['merchant_order_id'],params={"mid":"mch38026"})
             self.assertEqual(resp.status_code, 200)
             logging.info("successfully query order with following response data:")
             data = resp.json()
@@ -140,6 +144,7 @@ class BscanCOrderCreateTestCase(unittest.TestCase):
             if (resp.status_code == 200) and (data['error_code'] == 'SUCCESS'):
                 logging.info('the order is successfully pay. now testing refund ......')
                 params = {
+                    "mid":"mch38026",
                     'refund_amount':payment_amount,
                     'refund_order_id':"Refund_" + merchant_order_id
                 }
