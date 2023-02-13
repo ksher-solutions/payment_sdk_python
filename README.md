@@ -1,5 +1,9 @@
 # Payment_sdk_python
 
+> Ksher will shut down the API connection via .vip.ksher.net. That make new register merchant will unable to use system over .vip.ksher.net.
+>
+> Merchants are currently connected, Please change the API to connection http://api.ksher.net.
+
 This is python sdk for integrating your python application with Ksher Payment Gateway. Please refers to our official api document [here](https://doc.vip.ksher.net)
 
 ## Requirement
